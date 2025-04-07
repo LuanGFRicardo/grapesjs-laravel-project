@@ -1,0 +1,1 @@
+Rode `cd grapesjs-laravel`, `composer install` e `php artisan serve`.
