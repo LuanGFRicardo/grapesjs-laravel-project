@@ -8,9 +8,9 @@ use App\Page;
 
 class GrapesEditorController extends Controller
 {
-    public function index()
+    public function index($template)
     {
-        return view('grapes-editor');
+        return view('grapes-editor', ['template' => $template]);
     }
 
     public function salvarTemplate(Request $request)
@@ -56,5 +56,11 @@ class GrapesEditorController extends Controller
             'css' => $page->css,
             'gjs_json' => $page->projeto ?? '{}', // nome esperado pelo JS
         ]);
+    }
+
+    public function menu()
+    {
+        $templates = Page::all(['id', 'nome']);
+        return view('grapes-editor-menu', compact('templates'));
     }
 }

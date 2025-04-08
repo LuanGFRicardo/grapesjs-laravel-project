@@ -5,6 +5,8 @@
   <title>Editor de Newsletter - GrapesJS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="template-name" content="{{ $template }}">
+
   <!-- CSS GrapesJS -->
   <link href="{{ asset('vendor/grapesjs/css/grapes.min.css') }}" rel="stylesheet" />
 
@@ -27,7 +29,8 @@
   <div id="gjs">
   </div>
   <button onclick="salvarTemplate()">💾 Salvar</button>
-  <button onclick="carregarTemplate('pagina-home')">📂 Carregar</button>  
+  <button onclick="carregarTemplate()">📂 Carregar</button>  
+  <button onclick="voltarParaMenu()">⬅️ Voltar ao Menu</button>
 
   <!-- ✅ JS do GrapesJS -->
   <script src="{{ asset('vendor/grapesjs/js/grapes.min.js') }}"></script>
@@ -44,17 +47,19 @@
   <script src="{{ asset('vendor/grapesjs/js/grapesjs-custom-block.js') }}"></script>
 
   <script>
+    const nomeTemplate = document.querySelector('meta[name="template-name"]').getAttribute('content');
+
     const salvarTemplate = () => {
       const htmlLimpo = getCleanHtml();
 
-      fetch('http://127.0.0.1:8000/salvar-template', {
+      fetch(`http://127.0.0.1:8000/salvar-template/${nomeTemplate}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
-          title: 'pagina-home',
+          title: nomeTemplate,
           html: htmlLimpo,
           css: editor.getCss(),
           gjs_json: JSON.stringify(editor.getProjectData())
@@ -77,8 +82,8 @@
       });
     };
   
-    const carregarTemplate = (nome) => {
-      fetch('http://127.0.0.1:8000/get-template/pagina-home')
+    const carregarTemplate = () => {      
+      fetch(`http://127.0.0.1:8000/get-template/${nomeTemplate}`)
       .then(async res => {
         if (!res.ok) {
           const html = await res.text();
@@ -96,6 +101,10 @@
         editor.loadProjectData(JSON.parse(data.gjs_json));
       })
       .catch(err => console.error("❌ Erro ao carregar:", err));
+    };
+
+    const voltarParaMenu = () => {
+      window.location.href = '/';
     };
   
     const getCleanHtml = () => {
@@ -206,7 +215,7 @@
       });
   
       // ✅ Carregar template ao iniciar
-      carregarTemplate('pagina-home');
+      carregarTemplate(nomeTemplate);
     };
   </script>
   
