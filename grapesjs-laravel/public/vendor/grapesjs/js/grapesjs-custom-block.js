@@ -37,6 +37,15 @@ grapesjs.plugins.add('gjs-custom-blocks', (editor, opts = {}) => {
         }
     });
      
-
+    editor.BlockManager.add('bloco-lista-sql', {
+      label: 'SQL: Lista Registros',
+      category: 'Componentes Customizados',
+      attributes: { class: 'fa fa-list' },
+      content: {
+        type: 'sql-componente',
+        attributes: { 'data-func': 'sql:lista-registros' },
+        content: `<div><p>Carregando dados...</p></div>`
+      }
+    });
   });
   

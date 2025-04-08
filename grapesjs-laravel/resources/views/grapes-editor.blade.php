@@ -162,8 +162,15 @@
           fetch(`http://localhost:8000/exibir_dados.php?tipo=${tipo}`)
             .then(r => r.json())
             .then(data => {
-              let html = "";
-              data.forEach(item => html += `<p>ID: ${item.registro}</p>`);
+              if (!Array.isArray(data)) {
+                console.error("❌ Dados inválidos:", data);
+                return;
+              }
+
+              let html = "<ul>";
+              data.forEach(item => html += `<li>${item.registro}</li>`);
+              html += "</ul>";
+
               container.components(html);
             })
             .catch(err => console.error(`❌ Erro no tipo [${tipo}]:`, err));
