@@ -140,13 +140,25 @@
           codeViewerTheme: 'material'                
         },
       });
+
+      let carregarTimeout = null;
+      const carregarDadosDebounced = () => {
+        clearTimeout(carregarTimeout);
+        carregarTimeout = setTimeout(carregarDados, 100);
+      };
   
       const carregarDados = () => {
         const wrapper = editor.getWrapper();
+        if (!wrapper) {
+          console.error("❌ Wrapper ainda não está disponível.");
+          return;
+        }
+
         const sqlContainers = wrapper.find('[data-func^="sql:"]');
         sqlContainers.forEach(container => {
           const funcValue = container.getAttributes()['data-func'];
           const [, tipo] = funcValue.split(':');
+
           fetch(`http://localhost:8000/exibir_dados.php?tipo=${tipo}`)
             .then(r => r.json())
             .then(data => {
@@ -158,12 +170,13 @@
         });
       };
   
-      editor.on('load', carregarDados);
+      editor.on('load', carregarDadosDebounced);
+
       editor.on('component:add', component => {
         const func = component.getAttributes()['data-func'];
-        if (func?.startsWith('sql:')) carregarDados();
+        if (func?.startsWith('sql:')) carregarDadosDebounced();
       });
-  
+
       editor.DomComponents.addType('sql-componente', {
         model: {
           defaults: {
@@ -175,12 +188,12 @@
           init() {
             this.on('change', () => {
               const attr = this.getAttributes()['data-func'];
-              if (attr?.startsWith('sql:')) carregarDados();
+              if (attr?.startsWith('sql:')) carregarDadosDebounced();
             });
           },
           afterInit() {
             const attr = this.getAttributes()['data-func'];
-            if (attr?.startsWith('sql:')) carregarDados();
+            if (attr?.startsWith('sql:')) carregarDadosDebounced();
           }
         }
       });
