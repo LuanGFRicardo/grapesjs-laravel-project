@@ -52,7 +52,7 @@
     const salvarTemplate = () => {
       const htmlLimpo = getCleanHtml();
 
-      fetch(`http://127.0.0.1:8000/salvar-template/${nomeTemplate}`, {
+      fetch(`http://127.0.0.1:8000/salvar-template`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
