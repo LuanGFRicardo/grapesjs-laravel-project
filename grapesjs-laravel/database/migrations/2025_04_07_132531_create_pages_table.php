@@ -9,16 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->longText('html');
             $table->longText('css')->nullable();
+            $table->longText('gjs_json')->nullable();
             $table->timestamps();
         });
-    }
+    }    
 
     /**
      * Reverse the migrations.

@@ -1,0 +1,51 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[templates](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nome] [nvarchar](100) NOT NULL,
+	[html] [nvarchar](max) NOT NULL,
+	[projeto] [nvarchar](max) NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[templates] ADD PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+ALTER TABLE [dbo].[templates] ADD UNIQUE NONCLUSTERED 
+(
+	[nome] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+INSERT INTO [master].[dbo].[templates] (
+    [nome],
+    [html],
+    [projeto]
+)
+VALUES (
+    'pagina-home',
+    '<div class="container"><h1>Bem-vindo ao GrapesJS</h1><p>Conteúdo inicial.</p></div>',
+    '{
+        "assets": [],
+        "css": ".container { padding: 20px; background: #f0f0f0; }",
+        "html": "<div class=\\"container\\"><h1>Bem-vindo ao GrapesJS</h1><p>Conteúdo inicial.</p></div>",
+        "components": [{
+            "type": "text",
+            "content": "Bem-vindo ao GrapesJS"
+        }],
+        "styles": [
+            {
+                "selectors": [".container"],
+                "style": {
+                    "padding": "20px",
+                    "background-color": "#f0f0f0"
+                }
+            }
+        ]
+    }'
+);

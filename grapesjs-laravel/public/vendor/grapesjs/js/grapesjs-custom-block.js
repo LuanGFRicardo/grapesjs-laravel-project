@@ -16,8 +16,8 @@ grapesjs.plugins.add('gjs-custom-blocks', (editor, opts = {}) => {
       `
     });
   
-    blockManager.add('botao-chamativo', {
-      label: 'Botão Chamativo',
+    blockManager.add('botao-customizado', {
+      label: 'Botão Customizado',
       category: 'Componentes Customizados',
       attributes: { class: 'fa fa-hand-pointer' },
       content: `
