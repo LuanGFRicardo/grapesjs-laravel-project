@@ -63,4 +63,46 @@ class GrapesEditorController extends Controller
         $templates = Page::all(['id', 'nome']);
         return view('grapes-editor-menu', compact('templates'));
     }
+
+    public function criarTemplate(Request $request)
+    {
+        $nome = trim($request->input('nome'));
+    
+        if (!$nome) {
+            return response()->json(['error' => 'Nome inválido'], 400);
+        }
+    
+        if (Page::where('nome', $nome)->exists()) {
+            return response()->json(['error' => 'Template já existe'], 400);
+        }
+    
+        $htmlPadrao = '<div class="container"><h1>Novo Template Criado</h1><p>Comece aqui...</p></div>';
+    
+        $gjsJson = json_encode([
+            'assets' => [],
+            'styles' => [],
+            'pages' => [
+                [
+                    'name' => $nome,
+                    'styles' => [],
+                    'frames' => [[
+                        'component' => [
+                            'tagName' => 'div',
+                            'components' => [
+                                ['type' => 'text', 'content' => 'Novo template']
+                            ]
+                        ]
+                    ]]
+                ]
+            ]
+        ], JSON_UNESCAPED_UNICODE);
+    
+        Page::create([
+            'nome' => $nome,
+            'html' => $htmlPadrao,
+            'projeto' => $gjsJson
+        ]);
+    
+        return response()->json(['success' => true, 'nome' => $nome]);
+    }
 }
